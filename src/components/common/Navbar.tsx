@@ -9,9 +9,9 @@ import { useAppSettings } from '@/contexts/AppSettingsContext';
 export default function Navbar() {
   const pathname = usePathname();
   const { currentMode } = useAppSettings();
-
   const navItems = [
     { href: '/chat', label: 'Chat', icon: MessageSquare },
+    { href: '/models', label: 'Models', icon: Bot },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/settings', label: 'Settings', icon: Settings },
     { href: '/history', label: 'History', icon: History },

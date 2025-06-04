@@ -13,25 +13,17 @@ import {
   Network, 
   Target, 
   Gauge, 
-  Settings, 
   RefreshCw,
   BarChart3,
-  LineChart,
-  PieChart,
   Activity,
-  Maximize2,
-  Filter,
-  Download,
-  Share,
-  Bug,
   Shield,
   Sparkles,
   Brain,
   Layers,
   MonitorSpeaker
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedCard } from '@/components/ui/animations';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar, RadialBarChart, RadialBar, Cell } from 'recharts';
+import { AnimatedCard } from '@/components/ui/animations';
+import { LineChart as RechartsLineChart, Line, ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 // Types
 interface PerformanceMetric {
@@ -277,8 +269,7 @@ interface PerformanceOptimizationDashboardProps {
 }
 
 export default function PerformanceOptimizationDashboard({ className = '' }: PerformanceOptimizationDashboardProps) {
-  const [selectedTimeframe, setSelectedTimeframe] = useState<'1h' | '6h' | '24h' | '7d'>('24h');
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'response' | 'throughput' | 'reliability' | 'efficiency'>('all');
+  const [selectedCategory] = useState<'all' | 'response' | 'throughput' | 'reliability' | 'efficiency'>('all');
   const [showRecommendations, setShowRecommendations] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
@@ -354,10 +345,9 @@ export default function PerformanceOptimizationDashboard({ className = '' }: Per
               { key: 'overview', label: 'Overview', icon: Gauge },
               { key: 'detailed', label: 'Detailed', icon: BarChart3 },
               { key: 'alerts', label: 'Alerts', icon: AlertTriangle }
-            ].map(({ key, label, icon: Icon }) => (
-              <button
+            ].map(({ key, label, icon: Icon }) => (              <button
                 key={key}
-                onClick={() => setViewMode(key as any)}
+                onClick={() => setViewMode(key as 'overview' | 'detailed' | 'alerts')}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2 ${
                   viewMode === key
                     ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow'
@@ -732,11 +722,10 @@ export default function PerformanceOptimizationDashboard({ className = '' }: Per
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
-                  { label: 'CPU Usage', value: MOCK_SYSTEM_HEALTH.cpu, icon: Cpu, color: 'blue' },
-                  { label: 'Memory', value: MOCK_SYSTEM_HEALTH.memory, icon: Database, color: 'green' },
+                  { label: 'CPU Usage', value: MOCK_SYSTEM_HEALTH.cpu, icon: Cpu, color: 'blue' },                  { label: 'Memory', value: MOCK_SYSTEM_HEALTH.memory, icon: Database, color: 'green' },
                   { label: 'Disk I/O', value: MOCK_SYSTEM_HEALTH.disk, icon: Layers, color: 'purple' },
                   { label: 'Network', value: MOCK_SYSTEM_HEALTH.network, icon: Network, color: 'yellow' }
-                ].map((item, index) => (
+                ].map((item) => (
                   <div key={item.label} className="text-center">
                     <div className="relative w-24 h-24 mx-auto mb-3">
                       <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">

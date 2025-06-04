@@ -12,11 +12,9 @@ import {
   Award,
   Activity,
   PieChart,
-  LineChart,
-  Calendar,
   Filter
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedCard } from '@/components/ui/animations';
+import { AnimatedCard } from '@/components/ui/animations';
 import TokenUsageChart from '@/components/analytics/TokenUsageChart';
 import type { TokenUsage } from '@/components/analytics/TokenUsageChart';
 
@@ -182,10 +180,9 @@ export default function AnalyticsDashboard({ data = MOCK_ANALYTICS_DATA, classNa
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <Filter className="w-4 h-4 text-gray-400" />
-            <select
+            <Filter className="w-4 h-4 text-gray-400" />            <select
               value={timeframe}
-              onChange={(e) => setTimeframe(e.target.value as any)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeframe(e.target.value as '24h' | '7d' | '30d')}
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500"
             >
               <option value="24h">Last 24 hours</option>
@@ -199,10 +196,9 @@ export default function AnalyticsDashboard({ data = MOCK_ANALYTICS_DATA, classNa
               { key: 'usage', label: 'Usage', icon: BarChart3 },
               { key: 'performance', label: 'Performance', icon: TrendingUp },
               { key: 'users', label: 'Users', icon: Users }
-            ].map(({ key, label, icon: Icon }) => (
-              <button
+            ].map(({ key, label, icon: Icon }) => (              <button
                 key={key}
-                onClick={() => setSelectedMetric(key as any)}
+                onClick={() => setSelectedMetric(key as 'usage' | 'performance' | 'users')}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2 ${
                   selectedMetric === key
                     ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow'
@@ -476,7 +472,7 @@ interface KPICardProps {
   title: string;
   value: string;
   change: number;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   color: 'blue' | 'green' | 'purple' | 'yellow';
   suffix?: string;
 }

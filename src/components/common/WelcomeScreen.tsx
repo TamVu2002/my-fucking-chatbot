@@ -5,7 +5,6 @@ import {
   MessageSquare, 
   Zap, 
   FileText, 
-  Settings, 
   Keyboard,
   Sparkles,
   Shield,
@@ -108,7 +107,7 @@ export default function WelcomeScreen() {
           variants={itemVariants}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12"
         >
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <motion.div
               key={feature.title}
               variants={featureVariants}
@@ -135,7 +134,7 @@ export default function WelcomeScreen() {
               <h3 className="font-semibold text-foreground">Keyboard Shortcuts</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {shortcuts.map((shortcut, index) => (
+              {shortcuts.map((shortcut) => (
                 <motion.div
                   key={shortcut.key}
                   variants={itemVariants}

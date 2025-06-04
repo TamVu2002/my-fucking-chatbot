@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Target, Star, ThumbsUp, ThumbsDown, MessageSquare, TrendingUp, Award, AlertCircle } from 'lucide-react';
+import { Target, Star, ThumbsUp, ThumbsDown, MessageSquare, TrendingUp, Award } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 
 // Mock data for quality metrics

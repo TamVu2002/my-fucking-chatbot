@@ -4,48 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Brain, 
   Zap, 
-  TrendingUp, 
-  TrendingDown, 
   Clock, 
   DollarSign, 
   Target, 
   Star, 
-  Award, 
   BarChart3, 
-  LineChart, 
-  PieChart, 
-  Activity, 
   Gauge, 
-  Shield, 
-  Code, 
-  FileText, 
-  Palette, 
-  Globe, 
-  Users, 
-  Filter, 
   Search, 
   RefreshCw, 
   Download, 
   Share2, 
-  Settings,
   Plus,
-  Minus,
   Check,
   X,
-  Info,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  Bookmark,
-  ThumbsUp,
-  ThumbsDown,
-  Play,
-  Pause,
-  RotateCcw
+  Play
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedCard } from '@/components/ui/animations';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Cell, PieChart as RechartsPieChart, Pie } from 'recharts';
+import { AnimatedCard } from '@/components/ui/animations';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 
 // Types
 interface ModelMetrics {
@@ -385,9 +360,8 @@ export default function AdvancedModelComparison({ className = '' }: AdvancedMode
   const [showInactive, setShowInactive] = useState(false);
   const [comparisonTests, setComparisonTests] = useState(MOCK_COMPARISON_TESTS);
   const [isRunningTests, setIsRunningTests] = useState(false);
-
   const filteredModels = useMemo(() => {
-    let filtered = MOCK_MODELS.filter(model => {
+    const filtered = MOCK_MODELS.filter(model => {
       if (!showInactive && !model.isActive) return false;
       if (filterCategory !== 'all' && model.category !== filterCategory) return false;
       if (searchQuery) {

@@ -8,13 +8,10 @@ import {
   Upload, 
   RotateCcw, 
   Save,
-  Eye,
-  Sun,
-  Moon,
-  Monitor
+  Eye
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
-import { useAppSettings } from '@/contexts/AppSettingsContext';
+import { useAppSettings, Theme } from '@/contexts/AppSettingsContext';
 
 interface CustomTheme {
   name: string;
@@ -136,7 +133,7 @@ interface ThemeCustomizerProps {
 }
 
 export default function ThemeCustomizer({ isOpen, onClose }: ThemeCustomizerProps) {
-  const { currentTheme, setCurrentTheme } = useAppSettings();
+  const { setCurrentTheme } = useAppSettings();
   const [selectedTheme, setSelectedTheme] = useState<string>('light');
   const [customTheme, setCustomTheme] = useState<CustomTheme>(defaultThemes.light);
   const [previewMode, setPreviewMode] = useState(false);
@@ -201,7 +198,7 @@ export default function ThemeCustomizer({ isOpen, onClose }: ThemeCustomizerProp
     
     // Apply the theme
     applyTheme(customTheme);
-    setCurrentTheme(selectedTheme as any);
+    setCurrentTheme(selectedTheme as Theme);
     onClose();
   };
 

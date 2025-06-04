@@ -47,6 +47,7 @@ export default function ChatPage() {
   const [systemPrompt, setSystemPrompt] = useState('');
   const [uploadedFile, setUploadedFile] = useState<{ name: string; content: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
   // Load models on component mount
   useEffect(() => {
     const loadModels = async () => {
@@ -78,6 +79,7 @@ export default function ChatPage() {
       setSystemPrompt(defaultNSFWPrompt);
     }
   }, [currentMode]);
+
   // Restore session if available
   useEffect(() => {
     if (sessionToRestore) {
@@ -87,7 +89,7 @@ export default function ChatPage() {
       setSystemPrompt(sessionToRestore.systemPrompt);
       setSessionToRestore(null);
     }
-  }, [sessionToRestore, setSessionToRestore, setChatParameters, setSelectedModel]);
+  }, [sessionToRestore, setSessionToRestore, setChatParameters]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -473,10 +475,8 @@ export default function ChatPage() {
                 min="0"
                 max="2"
                 step="0.1"
-                value={chatParameters.temperature}                onChange={(e) => setChatParameters({
-                  ...chatParameters,
-                  temperature: parseFloat(e.target.value) 
-                })}
+                value={chatParameters.temperature}
+                onChange={(e) => setChatParameters(prev => ({ ...prev, temperature: parseFloat(e.target.value) }))}
                 className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
               />
               <div className="flex justify-between text-xs text-muted-foreground">

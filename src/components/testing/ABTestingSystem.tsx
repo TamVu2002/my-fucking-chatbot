@@ -1,26 +1,21 @@
 'use client';
-import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { 
   TestTube, 
   Plus, 
   Play, 
   Pause, 
-  BarChart3, 
-  TrendingUp, 
-  TrendingDown,
   Target,
   Award,
   RefreshCw,
   Download,
   Settings,
   CheckCircle,
-  XCircle,
   Clock,
   Users
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedButton } from '@/components/ui/animations';
-import { useAppSettings } from '@/contexts/AppSettingsContext';
+import { AnimatedButton } from '@/components/ui/animations';
 
 export interface PromptVariant {
   id: string;
@@ -75,13 +70,22 @@ export interface ABTest {
   winner?: string;
 }
 
+export interface TestMetrics {
+  variantId: string;
+  variantName: string;
+  sampleSize: number;
+  avgResponseTime: number;
+  avgUserRating: number;
+  avgTokenCount: number;
+  engagementRate: number;
+}
+
 interface ABTestingSystemProps {
   onRunTest?: (test: ABTest, variant: PromptVariant, query: string) => Promise<TestResult>;
   className?: string;
 }
 
 export default function ABTestingSystem({ onRunTest, className = '' }: ABTestingSystemProps) {
-  const { theme } = useAppSettings();
   const [tests, setTests] = useState<ABTest[]>([]);
   const [selectedTest, setSelectedTest] = useState<ABTest | null>(null);
   const [showCreateTest, setShowCreateTest] = useState(false);
@@ -195,8 +199,7 @@ export default function ABTestingSystem({ onRunTest, className = '' }: ABTesting
       setIsRunningTest(false);
     }
   }, [testQuery, onRunTest]);
-
-  const calculateMetrics = useCallback((test: ABTest) => {
+  const calculateMetrics = useCallback((test: ABTest): TestMetrics[] => {
     const metrics = test.variants.map(variant => {
       const variantResults = test.results.filter(r => r.variantId === variant.id);
       
@@ -312,8 +315,7 @@ export default function ABTestingSystem({ onRunTest, className = '' }: ABTesting
             Your Tests
           </h2>
           
-          <div className="space-y-3">
-            {tests.map((test) => (
+          <div className="space-y-3">            {tests.map((test) => (
               <TestCard
                 key={test.id}
                 test={test}
@@ -321,7 +323,6 @@ export default function ABTestingSystem({ onRunTest, className = '' }: ABTesting
                 onSelect={() => setSelectedTest(test)}
                 onStart={() => startTest(test.id)}
                 onPause={() => pauseTest(test.id)}
-                calculateMetrics={calculateMetrics}
               />
             ))}
 
@@ -381,11 +382,9 @@ interface TestCardProps {
   onSelect: () => void;
   onStart: () => void;
   onPause: () => void;
-  calculateMetrics: (test: ABTest) => any[];
 }
 
-function TestCard({ test, isSelected, onSelect, onStart, onPause, calculateMetrics }: TestCardProps) {
-  const metrics = calculateMetrics(test);
+function TestCard({ test, isSelected, onSelect, onStart, onPause }: TestCardProps) {
   const totalResults = test.results.length;
 
   return (
@@ -482,7 +481,7 @@ interface TestDetailsViewProps {
   test: ABTest;
   onEdit: () => void;
   onExport: () => void;
-  calculateMetrics: (test: ABTest) => any[];
+  calculateMetrics: (test: ABTest) => TestMetrics[];
   determineWinner: (test: ABTest) => string | null;
   testQuery: string;
   setTestQuery: (query: string) => void;

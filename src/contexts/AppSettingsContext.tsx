@@ -23,6 +23,23 @@ export interface ChatSession {
   mode: Mode;
 }
 
+export interface Model {
+  id: string;
+  name: string;
+  description?: string;
+  context_length: number;
+  pricing?: {
+    prompt: string;
+    completion: string;
+    request?: string;
+  };
+  architecture?: {
+    modality: string;
+    tokenizer: string;
+    instruct_type?: string;
+  };
+}
+
 interface AppSettings {
   currentMode: Mode;
   setCurrentMode: (mode: Mode) => void;
@@ -32,6 +49,18 @@ interface AppSettings {
   setTheme: (theme: Theme) => void; // Deprecated: use setCurrentTheme
   sessionToRestore: ChatSession | null;
   setSessionToRestore: (session: ChatSession | null) => void;
+  selectedModel: string;
+  setSelectedModel: (model: string) => void;
+  chatParameters: {
+    temperature: number;
+    top_p: number;
+    max_tokens: number;
+  };
+  setChatParameters: (params: {
+    temperature: number;
+    top_p: number;
+    max_tokens: number;
+  }) => void;
   clearChatHistory: () => void;
   resetToDefaults: () => void;
 }
@@ -42,6 +71,12 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
   const [currentMode, setCurrentModeState] = useState<Mode>('safe');
   const [theme, setThemeState] = useState<Theme>('light');
   const [sessionToRestore, setSessionToRestore] = useState<ChatSession | null>(null);
+  const [selectedModel, setSelectedModelState] = useState<string>('');
+  const [chatParameters, setChatParametersState] = useState({
+    temperature: 0.7,
+    top_p: 1,
+    max_tokens: 2048,
+  });
 
   useEffect(() => {
     // Load saved settings from localStorage
@@ -56,17 +91,45 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setThemeState('dark');
     }
+    
+    const savedModel = localStorage.getItem('selectedModel');
+    if (savedModel) {
+      setSelectedModelState(savedModel);
+    }
+    
+    const savedParameters = localStorage.getItem('chatParameters');
+    if (savedParameters) {
+      try {
+        const params = JSON.parse(savedParameters);
+        setChatParametersState(params);
+      } catch (err) {
+        console.error('Failed to parse saved chat parameters', err);
+      }
+    }
   }, []);
   const setCurrentMode = (mode: Mode) => {
     setCurrentModeState(mode);
     localStorage.setItem('appMode', mode);
   };
-
   const setTheme = (theme: Theme) => {
     setThemeState(theme);
     localStorage.setItem('appTheme', theme);
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(theme);
+  };
+  
+  const setSelectedModel = (model: string) => {
+    setSelectedModelState(model);
+    localStorage.setItem('selectedModel', model);
+  };
+
+  const setChatParameters = (params: {
+    temperature: number;
+    top_p: number;
+    max_tokens: number;
+  }) => {
+    setChatParametersState(params);
+    localStorage.setItem('chatParameters', JSON.stringify(params));
   };
 
   const clearChatHistory = () => {
@@ -77,12 +140,20 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
   const resetToDefaults = () => {
     setCurrentModeState('safe');
     setThemeState('light');
+    setChatParametersState({
+      temperature: 0.7,
+      top_p: 1,
+      max_tokens: 2048,
+    });
+    setSelectedModelState('');
     localStorage.removeItem('appMode');
     localStorage.removeItem('appTheme');
     localStorage.removeItem('chatHistory');
     localStorage.removeItem('chatSessions');
     localStorage.removeItem('userPrompts');
     localStorage.removeItem('appSettings');
+    localStorage.removeItem('selectedModel');
+    localStorage.removeItem('chatParameters');
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add('light');
   };
@@ -91,8 +162,7 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
     // Apply theme to HTML element
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(theme);
-  }, [theme]);
-  return (
+  }, [theme]);  return (
     <AppSettingsContext.Provider value={{ 
       currentMode, 
       setCurrentMode, 
@@ -102,6 +172,10 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
       setTheme,
       sessionToRestore,
       setSessionToRestore,
+      selectedModel,
+      setSelectedModel,
+      chatParameters,
+      setChatParameters,
       clearChatHistory,
       resetToDefaults
     }}>

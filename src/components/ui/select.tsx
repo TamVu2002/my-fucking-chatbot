@@ -47,14 +47,21 @@ const SelectTrigger = React.forwardRef<
       type="button"
       className={cn(
         'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        // Mobile improvements
+        'min-h-[44px] sm:min-h-[40px] touch-manipulation',
+        // Better text wrapping for longer model names
+        'text-left',
         className
       )}
       onClick={() => setOpen(!open)}
       ref={ref}
       {...props}
     >
-      {children}
-      <ChevronDown className="h-4 w-4 opacity-50" />
+      <div className="flex-1 truncate">{children}</div>
+      <ChevronDown className={cn(
+        "h-4 w-4 opacity-50 shrink-0 transition-transform duration-200",
+        open && "transform rotate-180"
+      )} />
     </button>
   );
 });
@@ -81,7 +88,11 @@ const SelectContent = React.forwardRef<
       />
       <div
         className={cn(
-          'absolute top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
+          'absolute top-full z-50 mt-1 max-h-60 w-full min-w-[8rem] overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95',
+          // Mobile improvements
+          'sm:max-h-72 md:max-h-80',
+          // Ensure it doesn't go off screen on mobile
+          'left-0 right-0 sm:left-auto sm:right-auto sm:w-full',
           className
         )}
         ref={ref}
@@ -103,7 +114,9 @@ const SelectItem = React.forwardRef<
   return (
     <div
       className={cn(
-        'relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+        'relative flex w-full cursor-pointer select-none items-center rounded-sm py-2 pl-2 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+        // Mobile improvements
+        'min-h-[40px] sm:min-h-[36px]',
         className
       )}
       onClick={() => {

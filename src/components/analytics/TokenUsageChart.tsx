@@ -22,6 +22,22 @@ interface TokenUsageChartProps {
   className?: string;
 }
 
+interface GroupedTokenData {
+  timestamp: number;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  cost: number;
+  count: number;
+}
+
+interface ModelStats {
+  name: string;
+  totalTokens: number;
+  cost: number;
+  requests: number;
+}
+
 const COLORS = {
   primary: '#3b82f6',
   secondary: '#10b981',
@@ -72,11 +88,10 @@ export default function TokenUsageChart({
       }
       acc[intervalStart].inputTokens += item.inputTokens;
       acc[intervalStart].outputTokens += item.outputTokens;
-      acc[intervalStart].totalTokens += item.totalTokens;
-      acc[intervalStart].cost += item.cost;
+      acc[intervalStart].totalTokens += item.totalTokens;      acc[intervalStart].cost += item.cost;
       acc[intervalStart].count += 1;
       return acc;
-    }, {} as Record<number, any>);
+    }, {} as Record<number, GroupedTokenData>);
 
     return Object.values(grouped).map(item => ({
       ...item,
@@ -95,11 +110,10 @@ export default function TokenUsageChart({
           requests: 0
         };
       }
-      acc[item.model].totalTokens += item.totalTokens;
-      acc[item.model].cost += item.cost;
+      acc[item.model].totalTokens += item.totalTokens;      acc[item.model].cost += item.cost;
       acc[item.model].requests += 1;
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, ModelStats>);
 
     return Object.values(modelStats);
   }, [data]);

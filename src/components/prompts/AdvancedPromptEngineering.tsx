@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
   Brain,
-  Zap,
-  Target,
   Lightbulb,
   Wand2,
   Code,
@@ -15,27 +13,19 @@ import {
   Microscope,
   Palette,
   Settings,
-  Play,
-  RotateCcw,
-  Save,
   Copy,
-  Share2,
   TrendingUp,
   Award,
   Star,
   ChevronDown,
   ChevronUp,
   Plus,
-  Filter,
-  Search,
   ArrowRight,
   Gauge
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
-import { useAppSettings } from '@/contexts/AppSettingsContext';
 
 // Types for advanced prompt engineering
 interface PromptPattern {
@@ -75,7 +65,7 @@ interface PromptAnalysis {
 
 interface AdvancedPromptEngineeringProps {
   onPromptGenerated?: (prompt: string) => void;
-  onParametersChanged?: (params: any) => void;
+  onParametersChanged?: (params: Record<string, unknown>) => void;
   className?: string;
 }
 
@@ -151,11 +141,8 @@ const OPTIMIZATION_SUGGESTIONS = [
 
 export default function AdvancedPromptEngineering({
   onPromptGenerated,
-  onParametersChanged,
-  className = ''
+  onParametersChanged,  className = ''
 }: AdvancedPromptEngineeringProps) {
-  const { currentTheme } = useAppSettings();
-  
   // State management
   const [currentPrompt, setCurrentPrompt] = useState('');
   const [selectedPattern, setSelectedPattern] = useState<PromptPattern | null>(null);
@@ -280,10 +267,9 @@ export default function AdvancedPromptEngineering({
     if (onPromptGenerated) {
       onPromptGenerated(generatedPrompt);
     }
-    
-    // Update usage count
-    const updatedPattern = { ...selectedPattern, usageCount: selectedPattern.usageCount + 1 };
+      // Update usage count
     // In real app, save this to localStorage or database
+    setSelectedPattern(prev => prev ? { ...prev, usageCount: prev.usageCount + 1 } : prev);
   }, [selectedPattern, patternVariables, onPromptGenerated]);
 
   // Copy prompt to clipboard

@@ -20,10 +20,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { 
-  Settings, 
-  BarChart3, 
   MessageSquare, 
-  Clock,
   GripVertical,
   Eye,
   EyeOff,
@@ -257,7 +254,7 @@ export default function DragDropDashboard({
           className="text-center py-12 text-muted-foreground"
         >
           <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>No widgets visible. Click "Manage Widgets" to show some widgets.</p>
+          <p>No widgets visible. Click &quot;Manage Widgets&quot; to show some widgets.</p>
         </motion.div>
       )}
     </div>

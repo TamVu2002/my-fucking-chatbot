@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Plus, 
   Edit3, 
@@ -17,8 +17,7 @@ import {
   Upload,
   Filter
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedButton } from '@/components/ui/animations';
-import { useAppSettings } from '@/contexts/AppSettingsContext';
+import { AnimatedButton } from '@/components/ui/animations';
 
 export interface PromptVariable {
   name: string;
@@ -182,7 +181,6 @@ interface TemplatePromptSystemProps {
 }
 
 export default function TemplatePromptSystem({ onUseTemplate }: TemplatePromptSystemProps) {
-  const { theme } = useAppSettings();
   const [templates, setTemplates] = useState<PromptTemplate[]>(DEFAULT_TEMPLATES);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -269,8 +267,7 @@ export default function TemplatePromptSystem({ onUseTemplate }: TemplatePromptSy
 
     return processed;
   }, []);
-
-  const useTemplate = useCallback((template: PromptTemplate) => {
+  const handleUseTemplate = useCallback((template: PromptTemplate) => {
     // Initialize variable values with defaults
     const initialValues = template.variables.reduce((acc, variable) => {
       acc[variable.name] = variable.defaultValue;
@@ -418,7 +415,7 @@ export default function TemplatePromptSystem({ onUseTemplate }: TemplatePromptSy
             }}
             onDelete={() => deleteTemplate(template.id)}
             onToggleFavorite={() => toggleFavorite(template.id)}
-            onUse={() => useTemplate(template)}
+            onUse={() => handleUseTemplate(template)}
           />
         ))}
       </div>

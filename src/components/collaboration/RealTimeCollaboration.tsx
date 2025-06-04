@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users,
-  UserPlus,
-  MessageCircle,
-  Share2,
   Eye,
   Edit,
   Video,
@@ -15,8 +13,6 @@ import {
   VideoOff,
   Settings,
   Crown,
-  Shield,
-  Clock,
   Globe,
   Lock,
   Copy,
@@ -29,7 +25,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAppSettings } from '@/contexts/AppSettingsContext';
 
 // Types for collaboration features
 interface CollaborationUser {
@@ -77,11 +72,8 @@ interface RealTimeCollaborationProps {
 }
 
 export default function RealTimeCollaboration({ 
-  onMessageSend, 
-  onPromptChange, 
   className = '' 
-}: RealTimeCollaborationProps) {
-  const { currentTheme } = useAppSettings();
+}: Pick<RealTimeCollaborationProps, 'className'>) {
   
   // State management
   const [isActive, setIsActive] = useState(false);
@@ -91,17 +83,15 @@ export default function RealTimeCollaboration({
   const [inviteLink, setInviteLink] = useState('');
   const [showSettings, setShowSettings] = useState(false);
   const [notifications, setNotifications] = useState(true);
-  
-  // Real-time features
+    // Real-time features
   const [isVoiceChatEnabled, setIsVoiceChatEnabled] = useState(false);
   const [isVideoChatEnabled, setIsVideoChatEnabled] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted] = useState(false);
   const [cursors, setCursors] = useState<Record<string, { x: number; y: number; userId: string; userName: string }>>({});
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   
   // Refs for tracking
   const wsRef = useRef<WebSocket | null>(null);
-  const cursorTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   // Initialize collaboration session
   const initializeSession = useCallback((sessionName?: string) => {
@@ -141,41 +131,22 @@ export default function RealTimeCollaboration({
     // Generate invite link
     const link = `${window.location.origin}/collaborate/${sessionId}`;
     setInviteLink(link);
-    
-    // Initialize WebSocket connection (mock for now)
-    initializeWebSocket(sessionId);
+      // Note: WebSocket initialization would happen here in a real implementation
+    console.log(`Would connect to collaboration session: ${sessionId}`);
     
     // Add initial activity
-    addActivity('joined', 'Started collaboration session');
-  }, []);
-
-  // Mock WebSocket initialization
-  const initializeWebSocket = useCallback((sessionId: string) => {
-    // In a real implementation, this would connect to your WebSocket server
-    console.log(`Connecting to collaboration session: ${sessionId}`);
-    
-    // Simulate real-time cursor tracking
-    const handleMouseMove = (e: MouseEvent) => {
-      if (currentSession?.settings.enableCursorTracking && currentUser) {
-        const cursor = {
-          x: e.clientX,
-          y: e.clientY,
-          userId: currentUser.id,
-          userName: currentUser.name
-        };
-        
-        // In real implementation, send this to WebSocket
-        console.log('Cursor update:', cursor);
-      }
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [currentSession, currentUser]);
-
+    if (currentUser) {
+      const activity: CollaborationActivity = {
+        id: `activity-${Date.now()}`,
+        userId: userId,
+        userName: newUser.name,
+        action: 'joined',
+        details: 'Started collaboration session',
+        timestamp: new Date()
+      };
+        setActivities(prev => [activity, ...prev.slice(0, 49)]);
+    }
+  }, [currentUser]);
   // Add activity to the feed
   const addActivity = useCallback((action: CollaborationActivity['action'], details?: string) => {
     if (!currentUser) return;
@@ -263,10 +234,15 @@ export default function RealTimeCollaboration({
     };
 
     return (
-      <div className="relative">
-        <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium relative`}>
+      <div className="relative">        <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium relative`}>
           {user.avatar ? (
-            <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+            <Image 
+              src={user.avatar} 
+              alt={user.name} 
+              width={40} 
+              height={40} 
+              className="w-full h-full rounded-full object-cover" 
+            />
           ) : (
             user.name.charAt(0).toUpperCase()
           )}

@@ -1,46 +1,26 @@
 'use client';
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Brain, 
-  Sparkles, 
   TrendingUp, 
   Target, 
-  Lightbulb, 
-  Zap, 
-  Star, 
+  Zap,
   ChevronRight, 
   Filter, 
   Search, 
-  BarChart3, 
   MessageSquare, 
   Clock, 
   ThumbsUp, 
-  ThumbsDown, 
-  RefreshCw, 
-  Wand2, 
-  Rocket, 
-  Shield, 
-  Users, 
-  Globe, 
-  Award, 
+  ThumbsDown,
+  Wand2,
+  Users,
   Bookmark,
-  Share2,
-  Copy,
-  ExternalLink,
-  Settings,
-  BookOpen,
   PenTool,
   Palette,
-  Layers,
-  Code,
-  Music,
-  Camera,
-  FileText,
-  Database,
-  Cpu
+  Layers
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedCard } from '@/components/ui/animations';
+import { AnimatedCard } from '@/components/ui/animations';
 
 // Types
 interface AISuggestion {
@@ -67,18 +47,10 @@ interface AISuggestion {
 interface SuggestionCategory {
   id: string;
   name: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   color: string;
   description: string;
   count: number;
-}
-
-interface UserContext {
-  usagePatterns: string[];
-  preferences: string[];
-  skillLevel: 'beginner' | 'intermediate' | 'advanced';
-  goals: string[];
-  recentActivity: string[];
 }
 
 // Mock AI Suggestions Data
@@ -276,18 +248,10 @@ const SUGGESTION_CATEGORIES: SuggestionCategory[] = [
 
 interface AIPoweredSuggestionsEngineProps {
   className?: string;
-  userContext?: UserContext;
 }
 
 export default function AIPoweredSuggestionsEngine({ 
-  className = '',
-  userContext = {
-    usagePatterns: ['analytical_queries', 'creative_writing', 'code_review'],
-    preferences: ['detailed_explanations', 'step_by_step', 'examples'],
-    skillLevel: 'intermediate',
-    goals: ['improve_efficiency', 'reduce_costs', 'enhance_quality'],
-    recentActivity: ['prompt_optimization', 'model_comparison', 'analytics_review']
-  }
+  className = ''
 }: AIPoweredSuggestionsEngineProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -509,10 +473,9 @@ export default function AIPoweredSuggestionsEngine({
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <Filter className="w-4 h-4 text-gray-400" />
-              <select
-                value={filterBy}
-                onChange={(e) => setFilterBy(e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+              <select              value={filterBy}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterBy(e.target.value as 'all' | 'bookmarked' | 'high_impact' | 'easy')}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               >
                 <option value="all">All Suggestions</option>
                 <option value="bookmarked">Bookmarked</option>
@@ -523,10 +486,9 @@ export default function AIPoweredSuggestionsEngine({
 
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+              <select              value={sortBy}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as 'priority' | 'impact' | 'confidence' | 'recent')}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               >
                 <option value="priority">Priority</option>
                 <option value="impact">Impact</option>

@@ -5,23 +5,18 @@ import {
   Mic, 
   MicOff, 
   Volume2, 
-  VolumeX, 
-  Play, 
-  Pause, 
   Square,
   Download,
-  Upload,
   Settings,
-  AudioWaveform,
-  Languages
+  AudioWaveform
 } from 'lucide-react';
-import { AnimatedDiv, AnimatedButton } from '@/components/ui/animations';
+import { AnimatedButton } from '@/components/ui/animations';
 
 // Extend the Window interface to include speech recognition
 declare global {
   interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
+    SpeechRecognition: typeof SpeechRecognition | undefined;
+    webkitSpeechRecognition: typeof SpeechRecognition | undefined;
   }
   
   interface SpeechRecognition extends EventTarget {
@@ -31,12 +26,11 @@ declare global {
     maxAlternatives: number;
     start(): void;
     stop(): void;
-    onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
-    onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-    onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
-    onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null;
-  }
+    onstart: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+    onend: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+    onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => unknown) | null;    onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => unknown) | null;  }
   
+  // eslint-disable-next-line no-var
   var SpeechRecognition: {
     prototype: SpeechRecognition;
     new(): SpeechRecognition;
@@ -115,11 +109,10 @@ const SUPPORTED_LANGUAGES = [
 
 interface VoiceIntegrationProps {
   onTranscript?: (text: string) => void;
-  onSpeech?: (text: string) => void;
   className?: string;
 }
 
-export default function VoiceIntegration({ onTranscript, onSpeech, className = '' }: VoiceIntegrationProps) {
+export default function VoiceIntegration({ onTranscript, className = '' }: VoiceIntegrationProps) {
   const [settings, setSettings] = useState<VoiceSettings>(DEFAULT_VOICE_SETTINGS);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -130,10 +123,8 @@ export default function VoiceIntegration({ onTranscript, onSpeech, className = '
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [showSettings, setShowSettings] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
-
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -283,47 +274,8 @@ export default function VoiceIntegration({ onTranscript, onSpeech, className = '
   const stopListening = useCallback(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
-      stopAudioLevelMonitoring();
-    }
+      stopAudioLevelMonitoring();    }
   }, [stopAudioLevelMonitoring]);
-
-  const speak = useCallback((text: string) => {
-    if (!synthRef.current || !settings.tts.enabled) return;
-
-    // Stop any current speech
-    synthRef.current.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    const selectedVoice = availableVoices.find(voice => voice.name === settings.tts.voice);
-    
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    }
-    
-    utterance.rate = settings.tts.rate;
-    utterance.pitch = settings.tts.pitch;
-    utterance.volume = settings.tts.volume;
-
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-    };
-
-    utterance.onend = () => {
-      setIsSpeaking(false);
-    };
-
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event.error);
-      setIsSpeaking(false);
-    };
-
-    utteranceRef.current = utterance;
-    synthRef.current.speak(utterance);
-    
-    if (onSpeech) {
-      onSpeech(text);
-    }
-  }, [settings.tts, availableVoices, onSpeech]);
 
   const stopSpeaking = useCallback(() => {
     if (synthRef.current) {

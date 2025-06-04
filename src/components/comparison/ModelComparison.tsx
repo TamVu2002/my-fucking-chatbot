@@ -2,7 +2,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Send, Copy, Download, RotateCcw, Settings, Zap, Brain, Timer } from 'lucide-react';
-import { useAppSettings } from '@/contexts/AppSettingsContext';
 import { AnimatedDiv, AnimatedButton } from '@/components/ui/animations';
 
 interface ChatMessage {
@@ -78,7 +77,6 @@ const DEFAULT_SETTINGS = {
 };
 
 export default function ModelComparison() {
-  const { theme } = useAppSettings();
   const [sessions, setSessions] = useState<ModelSession[]>([]);
   const [prompt, setPrompt] = useState('');
   const [availableModels] = useState<Model[]>(DEFAULT_MODELS);

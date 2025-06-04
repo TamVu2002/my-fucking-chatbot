@@ -7,26 +7,106 @@ import { Button, type ButtonProps } from './button';
 // Animation variants cho các component
 export const fadeInUp: Variants = {
   initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
+  animate: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 25
+    }
+  },
+  exit: { 
+    opacity: 0, 
+    y: -20,
+    transition: {
+      duration: 0.2
+    }
+  }
 };
 
 export const fadeIn: Variants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 }
+  animate: { 
+    opacity: 1,
+    transition: {
+      duration: 0.3
+    }
+  },
+  exit: { 
+    opacity: 0,
+    transition: {
+      duration: 0.2
+    }
+  }
 };
 
 export const scaleIn: Variants = {
   initial: { scale: 0.95, opacity: 0 },
-  animate: { scale: 1, opacity: 1 },
-  exit: { scale: 0.95, opacity: 0 }
+  animate: { 
+    scale: 1, 
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 25
+    }
+  },
+  exit: { 
+    scale: 0.95, 
+    opacity: 0,
+    transition: {
+      duration: 0.2
+    }
+  }
 };
 
 export const slideIn: Variants = {
   initial: { x: -20, opacity: 0 },
-  animate: { x: 0, opacity: 1 },
-  exit: { x: 20, opacity: 0 }
+  animate: { 
+    x: 0, 
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 25
+    }
+  },
+  exit: { 
+    x: 20, 
+    opacity: 0,
+    transition: {
+      duration: 0.2
+    }
+  }
+};
+
+export const messageSlideIn: Variants = {
+  initial: { 
+    opacity: 0, 
+    y: 20,
+    scale: 0.95
+  },
+  animate: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 500,
+      damping: 30,
+      mass: 0.8
+    }
+  },
+  exit: { 
+    opacity: 0, 
+    y: -10,
+    scale: 0.95,
+    transition: {
+      duration: 0.2,
+      ease: "easeOut"
+    }
+  }
 };
 
 export const staggerContainer: Variants = {
