@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
-export type Mode = 'safe' | 'nsfw';
+export type Mode = 'safe' | 'nsfw' | 'jailbreak';
 export type Theme = 'light' | 'dark';
 
 export interface ChatSession {

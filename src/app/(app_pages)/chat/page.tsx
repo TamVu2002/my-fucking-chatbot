@@ -12,6 +12,7 @@ import ConnectionStatus from '@/components/ui/ConnectionStatus';
 import ModelInfo from '@/components/ui/ModelInfo';
 import ChatStats from '@/components/ui/ChatStats';
 import QuickActions from '@/components/ui/QuickActions';
+import JailbreakAssistant from '@/components/jailbreak/JailbreakAssistant';
 import { useSoundEffects } from '@/components/ui/SoundEffectPlayer';
 
 interface Message {
@@ -522,12 +523,23 @@ export default function ChatPage() {
             parameters={chatParameters}
           />
         )}
-      </div>
-
-      {/* Messages */}
+      </div>      {/* Messages */}
       <div className="flex-1 overflow-y-auto mb-4 chat-messages px-2 py-4 bg-gradient-to-b from-background/50 to-background/80 rounded-xl backdrop-blur-sm">
         {messages.length === 0 && (
-          <WelcomeMessage />
+          <>
+            <WelcomeMessage />
+            {/* Jailbreak Assistant - Show only in jailbreak mode */}
+            {currentMode === 'jailbreak' && (
+              <div className="mt-6">
+                <JailbreakAssistant
+                  onPromptGenerated={(prompt) => {
+                    setUserInput(prompt);
+                  }}
+                  selectedModel={selectedModel}
+                />
+              </div>
+            )}
+          </>
         )}
         
         <AnimatePresence mode="popLayout">
