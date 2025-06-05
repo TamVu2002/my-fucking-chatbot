@@ -4,9 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  NPM_FLAGS = "--production=false"
-  # API key đã được hardcode vào dự án, nên không cần thiết lập ở đây
-  # OPENROUTER_API_KEY = "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"
+  NPM_FLAGS = "--production=false"  # API key đã được hardcode vào dự án, nên không cần thiết lập ở đây
+  # OPENROUTER_API_KEY = "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"
 
 [[redirects]]
   from = "/api/*"

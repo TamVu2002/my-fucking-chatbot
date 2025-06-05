@@ -4,13 +4,22 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Use Netlify function instead of Python service
+    // Local development uses Python service, production uses Netlify function
     const isProduction = process.env.NODE_ENV === 'production';
-    const baseUrl = isProduction 
-      ? process.env.NEXT_PUBLIC_SITE_URL || 'https://your-site.netlify.app'
-      : 'http://localhost:3000';
+    let baseUrl, endpoint;
     
-    const response = await fetch(`${baseUrl}/.netlify/functions/jailbreak-generate`, {
+    if (isProduction) {
+      baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-site.netlify.app';
+      endpoint = `${baseUrl}/.netlify/functions/jailbreak-generate`;
+    } else {
+      // Use local Python service
+      baseUrl = 'http://localhost:8000';
+      endpoint = `${baseUrl}/generate`;
+    }
+    
+    console.log(`Using jailbreak endpoint: ${endpoint}`);
+    
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
