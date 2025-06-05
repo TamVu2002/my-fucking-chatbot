@@ -20,10 +20,11 @@ export interface JailbreakPrompt {
 }
 
 export interface JailbreakResponse {
-  prompts: JailbreakPrompt[];
+  prompts: JailbreakPrompt[] | string[];  // Support cho cả Netlify function response format
   success_probability: number;
-  techniques_used: string[];
-  generation_metadata: {
+  techniques_used?: string[];
+  metadata?: Record<string, unknown>;  // Support cho Netlify function response
+  generation_metadata?: {
     timestamp: string;
     model_type: string;
     creativity_level: number;

@@ -50,6 +50,84 @@ A comprehensive Next.js-based chatbot playground featuring OpenRouter integratio
 
 1. **Clone the repository**
 ```bash
+git clone https://github.com/TamVu2002/my-fucking-chatbot.git
+cd my-chatbot
+```
+
+2. **Install dependencies**
+```bash
+npm install
+# or
+yarn
+```
+
+3. **Set up environment variables**
+```bash
+cp .env.example .env.local
+```
+Then edit `.env.local` with your OpenRouter API key.
+
+4. **Run the development server**
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+## Deployment to Netlify
+
+This project is configured for easy deployment to Netlify directly from GitHub.
+
+### Deploy via Netlify UI
+
+1. Log in to [Netlify](https://app.netlify.com/)
+2. Click "New site from Git"
+3. Select GitHub and authorize Netlify
+4. Choose the repository `TamVu2002/my-fucking-chatbot`
+5. Configure build settings:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+6. Click "Deploy site"
+
+### Environment Variables
+
+Add these environment variables in Netlify dashboard (Site settings > Environment variables):
+
+```
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+NEXT_PUBLIC_SITE_URL=https://your-site-name.netlify.app
+NEXT_PUBLIC_DEFAULT_MODEL=openai/gpt-3.5-turbo
+NEXT_PUBLIC_APP_MODE=safe
+```
+
+### Continuous Deployment
+
+Each push to the main branch will trigger a new deployment automatically.
+
+## Python Jailbreak Service
+
+For local development with the Python jailbreak service:
+
+1. Install Python 3.8+ and pip
+2. Navigate to the Python service directory:
+```bash
+cd python-jailbreak-service
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Start the service:
+```bash
+python main.py
+# or use the provided script:
+# Windows: .\start-jailbreak-service.bat
+# PowerShell: .\start-jailbreak-service.ps1
+```
+
+In production on Netlify, the jailbreak functionality is provided by Netlify Functions without requiring the Python service.bash
 git clone <repository-url>
 cd my-chatbot
 ```
