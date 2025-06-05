@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_KEYS } from '@/lib/constants';
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -25,22 +26,14 @@ export async function POST(request: NextRequest) {
         { error: 'Missing required fields: model and messages' },
         { status: 400 }
       );
-    }
-
-    // Get API key from environment
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'OpenRouter API key not configured' },
-        { status: 500 }
-      );
-    }
+    }    // Get API key from environment or use default
+    const apiKey = process.env.OPENROUTER_API_KEY || API_KEYS.OPENROUTER;
 
     // Determine HTTP-Referer
     const referer = process.env.OPENROUTER_HTTP_REFERER || 
                    request.headers.get('origin') || 
                    process.env.NEXT_PUBLIC_APP_URL || 
-                   'http://localhost:3000';    // Prepare the request to OpenRouter
+                   'http://localhost:3000';// Prepare the request to OpenRouter
     const openRouterRequest = {
       model: body.model,
       messages: body.messages,

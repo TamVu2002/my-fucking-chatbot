@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { API_KEYS, API_ENDPOINTS } from '@/lib/constants';
 
 interface OpenRouterModel {
   id: string;
@@ -39,12 +40,12 @@ export async function GET() {
         (!model.pricing.request || parseFloat(model.pricing.request) === 0)
       );
       return NextResponse.json({ data: freeModels });
-    }
-
-    // Fetch fresh data from OpenRouter
-    const response = await fetch('https://openrouter.ai/api/v1/models', {
+    }    // Fetch fresh data from OpenRouter using default API key if environment variable is not set
+    const apiKey = process.env.OPENROUTER_API_KEY || API_KEYS.OPENROUTER;
+    
+    const response = await fetch(API_ENDPOINTS.OPENROUTER_MODELS, {
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });

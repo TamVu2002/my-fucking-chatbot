@@ -44,7 +44,7 @@ A comprehensive Next.js-based chatbot playground featuring OpenRouter integratio
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn
-- OpenRouter API key
+- ✅ NO API key needed! Default key included
 
 ### Installation
 
@@ -61,13 +61,16 @@ npm install
 yarn
 ```
 
-3. **Set up environment variables**
+3. **Run the development server immediately**
 ```bash
-cp .env.example .env.local
+npm run dev
+# or
+yarn dev
 ```
-Then edit `.env.local` with your OpenRouter API key.
 
-4. **Run the development server**
+No API key needed! The project includes a built-in API key.
+
+4. **(Optional) Custom environment variables**
 ```bash
 npm run dev
 # or
@@ -91,10 +94,11 @@ This project is configured for easy deployment to Netlify directly from GitHub.
 
 ### Environment Variables
 
-Add these environment variables in Netlify dashboard (Site settings > Environment variables):
+No environment variables needed! The project includes a built-in API key.
+
+If you want to customize, you can optionally add these in Netlify dashboard (Site settings > Environment variables):
 
 ```
-OPENROUTER_API_KEY=your_openrouter_api_key_here
 NEXT_PUBLIC_SITE_URL=https://your-site-name.netlify.app
 NEXT_PUBLIC_DEFAULT_MODEL=openai/gpt-3.5-turbo
 NEXT_PUBLIC_APP_MODE=safe

@@ -1,6 +1,9 @@
 import { Handler } from '@netlify/functions';
+import { API_KEYS } from '../../src/lib/constants';
 
 export const handler: Handler = async (event, context) => {
+  // API key mặc định đã được nhúng vào dự án
+  const apiKey = process.env.OPENROUTER_API_KEY || API_KEYS.OPENROUTER;
   // Set CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
